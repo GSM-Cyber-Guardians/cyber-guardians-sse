@@ -198,7 +198,7 @@ export const AttackListBox = styled.div<{ isLeft: boolean }>`
   height: ${(props) => (props.isLeft ? '31.75rem' : '35.0625rem')};
   border-radius: 1.25rem;
   background: #eee;
-  overflow: hidden;
+  overflow: scroll;
 `;
 
 export const AttackList = styled.div`

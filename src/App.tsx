@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import * as S from './style';
 import { Exclamation } from './Exclamation';
+import axios from 'axios';
+
+type AttackData = {
+  type: 'HTTP' | 'ICMP' | 'DNS' | 'SQL_INJECTION';
+  ip: string;
+  date: string;
+};
+
+type HistoryData = AttackData & { id: number; sid: number };
 
 function App() {
   const [isBtnClick, setIsBtnClick] = useState<boolean>(false);
@@ -10,6 +19,8 @@ function App() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLeft, setIsLeft] = useState(true);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
+  const [dataList, setDataList] = useState<AttackData[]>([]);
+  const [historyDataList, setHistoryDataList] = useState<HistoryData[]>([]);
 
   const handleToggleClick = () => {
     setIsToggleOn((prev) => !prev);
@@ -19,33 +30,52 @@ function App() {
       setIsSlidedDown(false);
     } else {
       if (isBtnClick) {
-        const eventSource = new EventSource('http://127.0.0.1:80/log/events/');
-
-        eventSource.onopen = () => {
-          console.log('onOpen');
-          setIsDetectionOn(true);
-          setTimeout(() => setIsSlidedDown(true), 1000);
-        };
-
-        eventSource.onmessage = async (e) => {
-          const res = await e.data;
-          console.log(res);
-        };
-
-        eventSource.onerror = () => {
-          setIsDetectionOn(false);
-          setIsSlidedDown(false);
-          eventSource.close();
-        };
+        sseProtocol();
+        fetchHistodyData();
+        // setTimeout(() => {
+        //   if (isBtnClick) {
+        //     setIsDetectionOn(true);
+        //     setTimeout(() => setIsSlidedDown(true), 1000);
+        //   }
+        // }, 1000);
       }
-
-      setTimeout(() => {
-        if (isBtnClick) {
-          setIsDetectionOn(true);
-          setTimeout(() => setIsSlidedDown(true), 1000);
-        }
-      }, 1000);
     }
+  };
+
+  const sseProtocol = () => {
+    const eventSource = new EventSource('http://127.0.0.1:80/log/events/');
+
+    eventSource.onopen = () => {
+      setIsDetectionOn(true);
+      setTimeout(() => setIsSlidedDown(true), 1000);
+    };
+
+    eventSource.addEventListener('event', (event) => {
+      try {
+        const data = JSON.parse(event.data) as AttackData;
+        setDataList((prevDataList) => [data, ...prevDataList]);
+        // console.log(dataList);
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    eventSource.onerror = () => {
+      setIsDetectionOn(false);
+      setIsSlidedDown(false);
+      eventSource.close();
+    };
+  };
+
+  const fetchHistodyData = () => {
+    const URL = 'http://127.0.0.1:80/log/';
+    axios
+      .get<HistoryData[]>(URL)
+      .then((response) => {
+        setHistoryDataList(response.data);
+        // console.log(historyDataList);
+      })
+      .catch(() => {});
   };
 
   const handleSnortTextClick = () => {
@@ -88,30 +118,48 @@ function App() {
           <S.TextBox onClick={() => setIsLeft(true)} isLeft={isLeft}>
             ATTACK
           </S.TextBox>
-          <S.TextBox onClick={() => setIsLeft(false)} isLeft={!isLeft}>
+          <S.TextBox
+            onClick={() => {
+              setIsLeft(false);
+              fetchHistodyData();
+            }}
+            isLeft={!isLeft}
+          >
             HISTORY
           </S.TextBox>
         </S.TextBoxContainer>
         {!isLeft && (
           <S.SelectBox>
-            {['HTTP FLOOD', 'DNS FLOOD', 'ICMP FLOOD', 'SQL INJECTION'].map((item) => (
+            {['HTTP', 'DNS', 'ICMP', 'SQL INJECTION'].map((item) => (
               <S.SelectItem key={item} isSelected={selectedItem === item} onClick={() => handleSelectItemClick(item)}>
                 {item}
               </S.SelectItem>
             ))}
           </S.SelectBox>
         )}
-        <S.AttackListBox isLeft={!isLeft}>
-          <S.AttackList>
-            [HTTP Attack] afjidasakfjs;j lisdjflaj;;,, j;aj;jaioja;fjs;oijfidsajfioa;ddddddddddsj
-          </S.AttackList>
-          <S.AttackList>
-            [HTTP Attack] afjidasakfjs;j lisdjflaj;;,, j;aj;jaioja;fjs;oijfidsajfioa;ddddddddddsj
-          </S.AttackList>
-          <S.AttackList>
-            [HTTP Attack] afjidasakfjs;j lisdjflaj;;,, j;aj;jaioja;fjs;oijfidsajfioa;ddddddddddsj
-          </S.AttackList>
-        </S.AttackListBox>
+        {isLeft ? (
+          <S.AttackListBox isLeft={!isLeft}>
+            <>
+              {dataList.map((item, index) => (
+                <S.AttackList key={index}>
+                  [{item.type}] {item.ip} - {item.date}
+                </S.AttackList>
+              ))}
+            </>
+          </S.AttackListBox>
+        ) : (
+          <S.AttackListBox isLeft={!isLeft}>
+            <>
+              {historyDataList
+                .filter((item) => (selectedItem ? item.type.includes(selectedItem) : true))
+                .map((item, index) => (
+                  <S.AttackList key={index}>
+                    [{item.type}] {item.ip} - {item.date}
+                  </S.AttackList>
+                ))}
+            </>
+          </S.AttackListBox>
+        )}
       </S.AttackListContainer>
       <S.Image src="https://www.cyberguardians.or.kr/images/common3/h_logo.png" />
       <S.ToggleContainer>
