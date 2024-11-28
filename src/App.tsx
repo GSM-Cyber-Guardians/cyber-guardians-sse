@@ -7,7 +7,9 @@ function App() {
   const [isToggleOn, setIsToggleOn] = useState<boolean>(false);
   const [isDetectionOn, setIsDetectionOn] = useState<boolean>(false);
   const [isSlidedDown, setIsSlidedDown] = useState<boolean>(false);
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false); // 모달 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isLeft, setIsLeft] = useState(true);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
 
   const handleToggleClick = () => {
     setIsToggleOn((prev) => !prev);
@@ -16,6 +18,27 @@ function App() {
       setIsDetectionOn(false);
       setIsSlidedDown(false);
     } else {
+      if (isBtnClick) {
+        const eventSource = new EventSource('http://127.0.0.1:80/log/events/');
+
+        eventSource.onopen = () => {
+          console.log('onOpen');
+          setIsDetectionOn(true);
+          setTimeout(() => setIsSlidedDown(true), 1000);
+        };
+
+        eventSource.onmessage = async (e) => {
+          const res = await e.data;
+          console.log(res);
+        };
+
+        eventSource.onerror = () => {
+          setIsDetectionOn(false);
+          setIsSlidedDown(false);
+          eventSource.close();
+        };
+      }
+
       setTimeout(() => {
         if (isBtnClick) {
           setIsDetectionOn(true);
@@ -27,6 +50,10 @@ function App() {
 
   const handleSnortTextClick = () => {
     setIsModalOpen((prev) => !prev);
+  };
+
+  const handleSelectItemClick = (item: string) => {
+    setSelectedItem(item);
   };
 
   return (
@@ -57,8 +84,24 @@ function App() {
         )}
       </S.CenterImgContainer>
       <S.AttackListContainer isSlidedDown={isSlidedDown}>
-        <S.AttackText>ATTACK</S.AttackText>
-        <S.AttackListBox>
+        <S.TextBoxContainer>
+          <S.TextBox onClick={() => setIsLeft(true)} isLeft={isLeft}>
+            ATTACK
+          </S.TextBox>
+          <S.TextBox onClick={() => setIsLeft(false)} isLeft={!isLeft}>
+            HISTORY
+          </S.TextBox>
+        </S.TextBoxContainer>
+        {!isLeft && (
+          <S.SelectBox>
+            {['HTTP FLOOD', 'DNS FLOOD', 'ICMP FLOOD', 'SQL INJECTION'].map((item) => (
+              <S.SelectItem key={item} isSelected={selectedItem === item} onClick={() => handleSelectItemClick(item)}>
+                {item}
+              </S.SelectItem>
+            ))}
+          </S.SelectBox>
+        )}
+        <S.AttackListBox isLeft={!isLeft}>
           <S.AttackList>
             [HTTP Attack] afjidasakfjs;j lisdjflaj;;,, j;aj;jaioja;fjs;oijfidsajfioa;ddddddddddsj
           </S.AttackList>

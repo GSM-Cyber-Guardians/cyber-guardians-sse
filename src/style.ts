@@ -151,34 +151,51 @@ export const AttackListContainer = styled.div<{ isSlidedDown: boolean }>`
   position: absolute;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   flex-direction: column;
+  height: 42.5rem;
   gap: 1.5rem;
   top: 20%;
   left: 50%;
-  transform: translate(-50%, -50%);
   width: 53rem;
-  height: ${(props) => (props.isSlidedDown ? '43.375rem' : '0')};
   visibility: ${(props) => (props.isSlidedDown ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.isSlidedDown ? 1 : 0)};
-  transform: ${(props) => (props.isSlidedDown ? 'translateY(0)' : 'translateY(20px)')};
   transition: height 1s ease, opacity 1s ease, visibility 1s ease, transform 1s ease;
   border-radius: 1.25rem;
   background: #fff;
   z-index: 10;
 `;
 
-export const AttackText = styled.p`
-  color: #000;
+export const TextBox = styled.button<{ isLeft: boolean }>`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 50%;
+  height: 5.92988rem;
+  border-radius: 1.25rem;
+  background: ${(props) => (props.isLeft ? '#fff' : '#DDD')};
+  color: ${(props) => (props.isLeft ? '#000' : '#B2B4B8')};
   font-size: 1.5rem;
   font-weight: 500;
   line-height: normal;
+  cursor: pointer;
+  outline: none;
+  border: none;
 `;
 
-export const AttackListBox = styled.div`
+export const TextBoxContainer = styled.div`
+  width: 100%;
+  display: flex;
+`;
+
+export const AttackListBox = styled.div<{ isLeft: boolean }>`
   position: relative;
+  padding: 1.5rem 0rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
   width: 50rem;
-  height: 37.0625rem;
+  height: ${(props) => (props.isLeft ? '31.75rem' : '35.0625rem')};
   border-radius: 1.25rem;
   background: #eee;
   overflow: hidden;
@@ -279,4 +296,28 @@ export const ExplainSubContent = styled.p`
   font-size: 1.5rem;
   font-weight: 300;
   line-height: normal;
+`;
+
+export const SelectBox = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+`;
+
+export const SelectItem = styled.button<{ isSelected: boolean }>`
+  display: flex;
+  width: 10.25rem;
+  padding: 0.75rem;
+  justify-content: center;
+  align-items: center;
+  border-radius: 1.25rem;
+  border: ${(props) => (props.isSelected ? '' : '1px solid #979797')};
+  background: ${(props) => (props.isSelected ? '#878787' : 'white')};
+  color: ${(props) => (props.isSelected ? 'white' : '#111')};
+  text-align: center;
+  font-size: 1.125rem;
+  font-weight: 400;
+  line-height: normal;
+  cursor: pointer;
+  border: ${(props) => (props.isSelected ? 'none' : '')};
 `;
