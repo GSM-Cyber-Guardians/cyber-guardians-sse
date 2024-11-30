@@ -43,7 +43,7 @@ function App() {
   };
 
   const sseProtocol = () => {
-    const eventSource = new EventSource('http://127.0.0.1:80/log/events/');
+    const eventSource = new EventSource('http://10.10.30.1:80/log/events/');
 
     eventSource.onopen = () => {
       setIsDetectionOn(true);
@@ -68,7 +68,7 @@ function App() {
   };
 
   const fetchHistodyData = () => {
-    const URL = 'http://127.0.0.1:80/log/';
+    const URL = 'http://10.10.30.1:80/log/';
     axios
       .get<HistoryData[]>(URL)
       .then((response) => {
@@ -130,7 +130,7 @@ function App() {
         </S.TextBoxContainer>
         {!isLeft && (
           <S.SelectBox>
-            {['HTTP', 'DNS', 'ICMP', 'SQL INJECTION'].map((item) => (
+            {['HTTP', 'DNS', 'ICMP', 'SQL_INJECTION'].map((item) => (
               <S.SelectItem key={item} isSelected={selectedItem === item} onClick={() => handleSelectItemClick(item)}>
                 {item}
               </S.SelectItem>
@@ -152,6 +152,7 @@ function App() {
             <>
               {historyDataList
                 .filter((item) => (selectedItem ? item.type.includes(selectedItem) : true))
+                .reverse()
                 .map((item, index) => (
                   <S.AttackList key={index}>
                     [{item.type}] {item.ip} - {item.date}
