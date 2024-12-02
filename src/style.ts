@@ -164,6 +164,11 @@ export const AttackListContainer = styled.div<{ isSlidedDown: boolean }>`
   border-radius: 1.25rem;
   background: #fff;
   z-index: 10;
+
+  @media (max-width: 1750px) {
+    left: 37.5%;
+    top: 17.5%;
+  }
 `;
 
 export const TextBox = styled.button<{ isLeft: boolean }>`
