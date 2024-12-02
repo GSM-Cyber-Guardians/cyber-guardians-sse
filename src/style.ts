@@ -195,6 +195,7 @@ export const TextBoxContainer = styled.div`
 
 export const AttackListBox = styled.div<{ isLeft: boolean }>`
   position: relative;
+  align-items: center;
   padding: 1.5rem 0rem;
   display: flex;
   flex-direction: column;
@@ -208,14 +209,23 @@ export const AttackListBox = styled.div<{ isLeft: boolean }>`
 
 export const AttackList = styled.div`
   display: flex;
-  width: 100%;
-  padding: 0.75rem 1.5rem;
+  width: 47.5rem;
+  padding: 1rem 1.5rem;
   justify-content: center;
   align-items: center;
   color: #f00;
   font-size: 1.125rem;
   font-weight: 400;
   line-height: normal;
+  border: 1px solid #ccc;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background: #ffeaea;
+    transform: translateY(-5px);
+  }
 `;
 
 export const Modal = styled.div`
