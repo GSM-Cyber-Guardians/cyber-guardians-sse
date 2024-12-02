@@ -14,8 +14,8 @@ type HistoryData = AttackData & { id: number; sid: number };
 function App() {
   const [isBtnClick, setIsBtnClick] = useState<boolean>(false);
   const [isToggleOn, setIsToggleOn] = useState<boolean>(false);
-  const [isDetectionOn, setIsDetectionOn] = useState<boolean>(false);
-  const [isSlidedDown, setIsSlidedDown] = useState<boolean>(false);
+  const [isDetectionOn, setIsDetectionOn] = useState<boolean>(true);
+  const [isSlidedDown, setIsSlidedDown] = useState<boolean>(true);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLeft, setIsLeft] = useState(true);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
@@ -43,7 +43,7 @@ function App() {
   };
 
   const sseProtocol = () => {
-    const eventSource = new EventSource('http://10.10.30.1:80/log/events/');
+    const eventSource = new EventSource('http://10.10.30.10:80/log/events/');
 
     eventSource.onopen = () => {
       setIsDetectionOn(true);
@@ -68,7 +68,7 @@ function App() {
   };
 
   const fetchHistodyData = () => {
-    const URL = 'http://10.10.30.1:80/log/';
+    const URL = 'http://10.10.30.10:80/log/';
     axios
       .get<HistoryData[]>(URL)
       .then((response) => {
