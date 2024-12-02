@@ -14,8 +14,8 @@ type HistoryData = AttackData & { id: number; sid: number };
 function App() {
   const [isBtnClick, setIsBtnClick] = useState<boolean>(false);
   const [isToggleOn, setIsToggleOn] = useState<boolean>(false);
-  const [isDetectionOn, setIsDetectionOn] = useState<boolean>(true);
-  const [isSlidedDown, setIsSlidedDown] = useState<boolean>(true);
+  const [isDetectionOn, setIsDetectionOn] = useState<boolean>(false);
+  const [isSlidedDown, setIsSlidedDown] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isLeft, setIsLeft] = useState(true);
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
