@@ -140,9 +140,6 @@ function App() {
         {isLeft ? (
           <S.AttackListBox isLeft={!isLeft}>
             <>
-              <S.AttackList>hello</S.AttackList>
-              <S.AttackList>hello</S.AttackList>
-              <S.AttackList>hello</S.AttackList>
               {dataList.map((item, index) => (
                 <S.AttackList key={index}>
                   [{item.type}] {item.ip} - {item.date}
