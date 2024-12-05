@@ -43,6 +43,7 @@ function App() {
   };
 
   const sseProtocol = () => {
+    // console.log(1);
     const eventSource = new EventSource('http://10.10.30.10:80/log/events/');
 
     eventSource.onopen = () => {};
@@ -107,6 +108,8 @@ function App() {
               setIsBtnClick(true);
               setIsToggleOn(false);
               handleToggleClick();
+              sseProtocol();
+              fetchHistodyData();
             }}
           >
             Catch Attack
