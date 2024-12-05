@@ -45,13 +45,12 @@ function App() {
   const sseProtocol = () => {
     const eventSource = new EventSource('http://10.10.30.10:80/log/events/');
 
-    eventSource.onopen = () => {
-      setIsDetectionOn(true);
-      setTimeout(() => setIsSlidedDown(true), 1000);
-    };
+    eventSource.onopen = () => {};
 
     eventSource.addEventListener('event', (event) => {
       try {
+        setIsDetectionOn(true);
+        setTimeout(() => setIsSlidedDown(true), 1000);
         const data = JSON.parse(event.data) as AttackData;
         setDataList((prevDataList) => [data, ...prevDataList]);
         // console.log(dataList);
@@ -107,6 +106,7 @@ function App() {
             onClick={() => {
               setIsBtnClick(true);
               setIsToggleOn(false);
+              handleToggleClick();
             }}
           >
             Catch Attack
@@ -164,9 +164,9 @@ function App() {
       </S.AttackListContainer>
       <S.Image src="https://www.cyberguardians.or.kr/images/common3/h_logo.png" />
       <S.ToggleContainer>
-        <S.Toggle onClick={handleToggleClick} isOn={isToggleOn}>
+        {/* <S.Toggle onClick={handleToggleClick} isOn={isToggleOn}>
           <S.ToggleCircle isOn={isToggleOn} />
-        </S.Toggle>
+        </S.Toggle> */}
         <S.SnortText onClick={handleSnortTextClick}>snort 란?</S.SnortText>
       </S.ToggleContainer>
 
